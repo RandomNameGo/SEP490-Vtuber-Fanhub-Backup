@@ -1,0 +1,42 @@
+
+  FE-01 & FE-02: Authentication, Authorization & Profile
+   * Controllers: AuthController, UserController
+   * Services: AuthServiceImpl, UserServiceImpl, JWTService, RefreshTokenService, OtpService, EmailService, CloudinaryService
+   * Models: User, SystemAccount, OtpVerification, RefreshToken, UserBadge, Badge
+   * Repositories: UserRepository, SystemAccountRepository, OtpVerificationRepository, RefreshTokenRepository, UserBadgeRepository
+   * DTOs: LoginRequest, LoginResponse, CreateUserRequest, UpdateUserRequest, UpdateEmailRequest, UserResponse, UserDetailResponse, SelectUserBadgeRequest
+
+  FE-03 & FE-04: Fan Hub & Member Management
+   * Controllers: FanHubController, FanHubMemberController
+   * Services: FanHubServiceImpl, FanHubMemberServiceImpl, ReportMemberServiceImpl, BanMemberServiceImpl, NotificationServiceImpl
+   * Models: FanHub, FanHubMember, FanHubBackground, FanHubCategory, ReportMember, BanMember
+   * Repositories: FanHubRepository, FanHubMemberRepository, ReportMemberRepository, BanMemberRepository, FanHubBackgroundRepository
+   * DTOs: CreateFanHubRequest, UpdateFanHubRequest, FanHubResponse, FanHubMemberResponse, CreateReportMemberRequest, CreateBanMemberRequest, MemberDetailResponse
+
+  FE-05 & FE-06: Post Management & User Interaction
+   * Controllers: PostController
+   * Services: PostServiceImpl, PostCommentServiceImpl, ReportPostServiceImpl, PostValidationServiceImplAsync, GeminiAIServiceImpl, SightEngineServiceImpl
+   * Models: Post, PostComment, PostMedia, PostLike, PostCommentLike, PostCommentGift, PostVote, VoteOption, ReportPost, PostAnalyze, FlaggedPost
+   * Repositories: PostRepository, PostCommentRepository, PostLikeRepository, PostCommentLikeRepository, PostVoteRepository, ReportPostRepository, PostMediaRepository
+   * DTOs: CreatePostRequest, PostResponse, PostCommentResponse, TranslatePostResponse, SummarizePostResponse, CreateReportPostRequest
+
+  FE-07: AI Chat Bot Experience
+   * Controllers: ChatMessageController, ChatSessionController
+   * Services: ChatMessageServiceImpl, ChatSessionServiceImpl, AiResponseServiceImpl, GeminiAIServiceImpl, GroqAIServiceImpl, FunctionCallingService
+   * Models: ChatMessage, ChatSession, ChatMessageMetadata
+   * Repositories: ChatMessageRepository, ChatSessionRepository, ChatMessageMetadataRepository
+   * DTOs: SendMessageRequest, MessageResponse, AIMessageResponse
+
+  FE-08: Gamification & Rewards System (Shop & Gacha)
+   * Controllers: ItemController, ShopItemController, BannerController
+   * Services: ItemServiceImpl, ShopItemServiceImpl, BannerServiceImpl, BannerItemServiceImpl, UserItemServiceImpl
+   * Models: Item, ShopItem, UserItem, Banner, BannerItem, PaymentHistory
+   * Repositories: ItemRepository, ShopItemRepository, UserItemRepository, BannerRepository, BannerItemRepository
+   * DTOs: CreateShopItemRequest, PurchaseItemRequest, GachaBannerItemRequest, ItemResponse, ShopItemResponse, GachaResultResponse
+
+  FE-09: Admin / System Management
+   * Controllers: SystemAccountController, SystemAnalyticController, VTuberApplicationController, FeedbackController, FanHubReportController, FanHubStrikeController, MasterDataController
+   * Services: SystemAccountServiceImpl, SystemAnalyticServiceImpl, VTuberApplicationServiceImpl, FeedbackServiceImpl, FanHubReportServiceImpl, FanHubStrikeServiceImpl
+   * Models: SystemAccount, VTuberApplication, UserFeedback, FanHubReport, FanHubStrike, FeedbackCategory
+   * Repositories: SystemAccountRepository, VTuberApplicationRepository, UserFeedbackRepository, FanHubReportRepository, FanHubStrikeRepository, FeedbackCategoryRepository
+   * DTOs: CreateSystemAccountRequest, VTuberApplicationResponse, FanHubReportResponse, FeedbackResponse, SystemAnalyticResponse

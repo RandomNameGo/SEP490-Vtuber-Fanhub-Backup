@@ -1,0 +1,305 @@
+========================================
+VTUBER FANHUB - BUSINESS RULES
+========================================
+
+========================================
+1. USER & ROLE MANAGEMENT
+========================================
+
+Roles:
+- USER
+- VTUBER
+- ADMIN
+- MODERATOR
+
+User Features:
+- Users can register with email OTP verification
+- Users have profiles with avatars, frames, badges, and an "Oshi" (favorite VTuber)
+- Users can select which badges to display on their profile
+- Users can update their profile information
+
+---
+
+========================================
+2. FANHUB (COMMUNITY) SYSTEM
+========================================
+
+FanHub Overview:
+- FanHub is a community/fan-club space managed by a VTuber
+- Each FanHub has a unique subdomain
+- Membership types: Owner, Moderator, Member
+
+FanHub Rules:
+- Users must join a FanHub to view/create posts
+- FanHub owners/moderators can:
+  * Approve/reject posts
+  * Manage members (ban/unban)
+  * View reports and moderate content
+  * Pin posts
+  * Reject posts with reasons
+
+---
+
+========================================
+3. POST SYSTEM
+========================================
+
+Post Types:
+- TEXT
+- IMAGE
+- VIDEO
+- POLL
+
+Post Creation Rules:
+- Posts are created within a FanHub
+- Posts go through a validation workflow:
+  PENDING → APPROVED or REJECTED
+- VTuber/Owner must review posts before they go public
+- Posts can have:
+  * Multiple images (1-4) or one video
+  * Hashtags (max 5)
+  * Poll options with voting
+
+Post Features:
+- Like/unlike posts
+- Bookmark posts
+- Comment on posts
+- Translate posts
+- Summarize posts
+- Share posts
+- Pin posts
+- Report posts
+- Delete posts
+
+---
+
+========================================
+4. COMMENT SYSTEM
+========================================
+
+Comment Rules:
+- Users can comment on posts
+- Comments can be liked/unliked
+- Users can send gifts with comments
+- Comments are tied to a specific post
+
+---
+
+========================================
+5. GACHA/BANNER SYSTEM
+========================================
+
+Banner Rules:
+- Banners are time-limited gacha events with start/end times
+- ONLY ONE banner can be active at a time (no overlapping periods)
+- Banners contain multiple BannerItems
+- Banners have a gacha cost (points required per pull)
+
+BannerItem Types:
+- Regular items (linked to Item entity)
+- GOOD_LUCK type (no item saved, just luck bonus)
+
+Gacha Process:
+- User spends points (gacha cost set per banner)
+- Weighted random selection based on multiplier
+- If regular item → saved to UserItem
+- If GOOD_LUCK → NOT saved to UserItem
+- User points are deducted
+- Banner must be currently active (start_time <= now <= end_time)
+
+Gacha Validation:
+- Check if user has sufficient points
+- Check if banner is currently active
+- Deduct points before performing gacha
+- Perform weighted random selection
+- Save result (except for GOOD_LUCK type)
+
+---
+
+========================================
+6. SHOP & ITEM SYSTEM
+========================================
+
+ShopItem Rules:
+- ShopItems are items available for purchase with points
+- Items have: name, description, image, category, price
+- Items can be created independently or linked to existing items
+- ShopItems can be viewed by all users
+
+Purchase Flow:
+- User must have enough paidPoints
+- Points are deducted
+- Purchased item saved to UserItem
+- Purchase timestamp is recorded
+
+Item Management:
+- Admins/Moderators can create new items
+- Items can be reused across ShopItems and BannerItems
+- If itemId is provided, existing item is used; otherwise new item is created
+
+---
+
+========================================
+7. POINTS & CURRENCY SYSTEM
+========================================
+
+Point Types:
+- points: General points (used for gacha AND shop purchases)
+
+Point Rules:
+- Points are deducted on gacha/purchase
+- Insufficient points → transaction rejected
+- Users can view their point balance
+- Both gacha and shop purchases use the same points pool
+
+---
+
+========================================
+8. REPORT & MODERATION SYSTEM
+========================================
+
+Report Rules:
+- Users can report posts and members
+- Reports are tracked per FanHub
+- Reports include reason and timestamp
+
+Moderation Actions:
+- VTuber/Owner can:
+  * View reported content
+  * Resolve reports (single or bulk)
+  * View pending reports
+  * Ban problematic members
+  * Unban members
+  * View ban history
+
+Report Workflow:
+- User submits report
+- Report appears in FanHub report list
+- Moderator/Owner reviews and resolves
+- Resolution message can be added
+- Reports can be resolved in bulk
+
+---
+
+========================================
+9. NOTIFICATION SYSTEM
+========================================
+
+Notification Features:
+- SSE (Server-Sent Events) for real-time notifications
+- Notifications for:
+  * Post approvals/rejections
+  * New comments
+  * Gacha results
+  * System events
+  * Report resolutions
+
+---
+
+========================================
+10. CONTENT MODERATION & AI
+========================================
+
+AI Features:
+- AI validation for posts (automated content check)
+- Posts can be summarized by AI
+- Posts can be translated by AI
+- AI helps moderate content automatically
+
+---
+
+========================================
+AUTHORIZATION RULES
+========================================
+
+Action                  | Allowed Roles
+------------------------|---------------------------
+Create FanHub           | USER, VTUBER
+Create Post             | USER, VTUBER (must be FanHub member)
+Review Posts            | VTUBER, OWNER, MODERATOR
+Create Banner/Item      | ADMIN, MODERATOR
+Gacha                   | USER, VTUBER
+Purchase Items          | USER, VTUBER
+Report Content          | USER, VTUBER
+Ban Members             | VTUBER, OWNER, MODERATOR
+Create Shop Items       | ADMIN, MODERATOR
+
+---
+
+========================================
+KEY ENTITY RELATIONSHIPS
+========================================
+
+User
+  ├── FanHub (as Owner/Member)
+  ├── Posts
+  ├── UserItems (purchased/obtained)
+  ├── UserBookmarks
+  ├── Reports
+  └── Notifications
+
+FanHub
+  ├── Posts
+  ├── Members
+  ├── Reports
+  └── Banner (active)
+
+Banner
+  ├── BannerItems
+  └── Gacha Events
+
+Item
+  ├── ShopItem (with price)
+  └── BannerItem (with multiplier)
+
+UserItem
+  ├── From Shop Purchase
+  └── From Gacha (except GOOD_LUCK)
+
+---
+
+========================================
+IMPORTANT BUSINESS CONSTRAINTS
+========================================
+
+1. ONE ACTIVE BANNER
+   - Only one banner can be active at any time period
+   - Validated by start/end time overlap check
+   - Creating overlapping banner is rejected
+
+2. POST APPROVAL
+   - Posts must be reviewed before going public
+   - Posts start in PENDING state
+   - VTuber/Owner approves or rejects
+
+3. GOOD_LUCK ITEMS
+   - Not saved to UserItem table
+   - No Item entity created for GOOD_LUCK type
+   - User still pays points for gacha
+
+4. SHOP PURCHASES
+   - Uses regular points (same as gacha)
+   - Insufficient points → purchase rejected
+
+5. GACHA
+   - Uses regular points
+   - Weighted random selection based on multiplier
+   - Banner must be currently active
+
+6. IMAGE UPLOADS
+   - All images uploaded to Cloudinary
+   - Images can be optional for some entities
+
+7. FANHUB MEMBERSHIP
+   - Required to create/view posts in a FanHub
+   - Users can be banned from FanHub
+
+8. BAN CHECK
+   - Banned users cannot participate in FanHub activities
+   - Ban status checked before actions
+
+---
+
+========================================
+END OF BUSINESS RULES
+========================================
