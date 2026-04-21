@@ -39,7 +39,7 @@ public class UserDailyMissionServiceImplTest {
         user.setPoints(100L);
 
         mission = new UserDailyMission();
-        mission.setUserId(userId);
+        mission.setUser(user);
         mission.setLikeAmount(0);
         mission.setBonus10(false);
         mission.setBonus20(false);

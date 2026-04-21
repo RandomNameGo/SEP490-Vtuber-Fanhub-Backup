@@ -36,7 +36,7 @@ public class BannerServiceImplTest {
         request.setName("Test Banner");
         request.setStartTime(Instant.now().plusSeconds(10));
         request.setEndTime(Instant.now().plusSeconds(1000));
-        request.setGachaCost(10L);
+        request.setGachaCost(10);
 
         MultipartFile image = mock(MultipartFile.class);
         when(image.isEmpty()).thenReturn(false);
